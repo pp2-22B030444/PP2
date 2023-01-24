@@ -1,7 +1,7 @@
 x = "awesome"
 
 
-def myfunc():
+def my():
   print("Python is " + x)
 
-myfunc()
+my()
