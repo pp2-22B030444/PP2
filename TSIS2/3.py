@@ -1,7 +1,7 @@
-import math
+from math import *
 num=int(input())
 i=1
-sqrt = math.sqrt(num)
+sqrt = sqrt(num)
 while i<=sqrt:
     print (i*i)
     i+=1
