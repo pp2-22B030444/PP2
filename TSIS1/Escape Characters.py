@@ -4,7 +4,7 @@ txt = "This will insert one \\ (backslash)."
 print(txt) 
 txt = "Hello\nWorld!"
 print(txt)
-txt = "gjhhjklv\rWorld!"
+txt = "Hello\rWorld!"
 print(txt) 
 txt = "Hello\tWorld!"
 print(txt)

@@ -2,8 +2,8 @@ x="awesome"
 
 def myfunc():
     global x
-    x = "funtastic"
+    x = "fantastic"
        
 myfunc()
 
-print("Python is " + x)    
+print("Python is " + x)

@@ -5,6 +5,7 @@ thisdict = {
 }
 thisdict.pop("model")
 print(thisdict)
+
 thisdict = {
   "brand": "Ford",
   "model": "Mustang",
@@ -12,6 +13,7 @@ thisdict = {
 }
 thisdict.popitem()
 print(thisdict)
+
 thisdict =	{
   "brand": "Ford",
   "model": "Mustang",
@@ -19,6 +21,7 @@ thisdict =	{
 }
 del thisdict["model"]
 print(thisdict)
+
 thisdict = {
   "brand": "Ford",
   "model": "Mustang",
