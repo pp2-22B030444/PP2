@@ -1,6 +1,6 @@
 from datetime import date , timedelta
-dt = date.today()-timedelta(1)
-dr = date.today()+timedelta(1)
+Yesterday = date.today()-timedelta(1)
+Tomorrow = date.today()+timedelta(1)
 print('Current Date :', date.today())
-print('Yesterday :', dt)
-print('Tomorrow :', dr)
+print('Yesterday :', Yesterday)
+print('Tomorrow :', Tomorrow)
