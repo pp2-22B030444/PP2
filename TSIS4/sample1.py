@@ -1,6 +1,6 @@
 import json
 
-with open("sample-data.json") as f:
+with open('sample-data.json') as f:
     data = json.load(f)
 
 header = "Interface Status\n" + "=" * 80 + "\n"
