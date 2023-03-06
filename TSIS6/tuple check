@@ -1,0 +1,7 @@
+#Test if all items in a tuple are True:
+tup = (1, 1, 0)
+x = all(tup)
+print(x) #False
+tup = (1, 1, True)
+x = all(tup)
+print(x) #True
