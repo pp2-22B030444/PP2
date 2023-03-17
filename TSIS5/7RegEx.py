@@ -10,4 +10,4 @@ def snake_to_camel(txt):
             change+=word
     return change
 
-print(snake_to_camel('zhasmin_is_power'))
+print(snake_to_camel('Zhasmin_is_power'))
