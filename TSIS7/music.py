@@ -4,7 +4,7 @@ pygame.init()
  
 screen = pygame.display.set_mode((800,500)) 
 running = True 
-songs = ['musics/5000.mp3','musics/Elestetem.mp3','musics/Jai.mp3','musics/Jol.mp3','musics/Ne angme.mp3','musics/Sub.mp3','musics/Uagyt.mp3','musics/Wukung.mp3'] 
+songs = ["musics/5000.mp3","musics/Elestetem.mp3","musics/Jai.mp3","musics/Jol.mp3","musics/Ne angme.mp3","musics/Sub.mp3","musics/Uagyt.mp3","musics/Wukung.mp3"] 
 play = True 
 num = 0  
 font = pygame.font.SysFont("comicsansms", 30) 
