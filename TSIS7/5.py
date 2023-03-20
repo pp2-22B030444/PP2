@@ -16,13 +16,13 @@ clock = pygame.time.Clock()
 image = pygame.image.load('mickeyclock.jpeg')
  
 # Set the size for the image
-DEFAULT_IMAGE_SIZE = (200, 200)
+DEFAULT_IMAGE_SIZE = (600, 600)
  
 # Scale the image to your needed size
 image = pygame.transform.scale(image, DEFAULT_IMAGE_SIZE)
  
 # Set a default position
-DEFAULT_IMAGE_POSITION = (200,200)
+DEFAULT_IMAGE_POSITION = (100,100)
  
 # Prepare loop condition
 running = False
