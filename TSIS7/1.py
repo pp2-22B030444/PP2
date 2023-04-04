@@ -14,10 +14,10 @@ sound=pygame.mixer.Sound('music.mp3')
 sound.play()
 while check:
     monitor.fill((5,150,50))
-    #pygame.draw.circle(monitor,'Black',(300,200),40)
+    pygame.draw.circle(monitor,'Black',(300,200),40,5)
     #monitor.blit(square,(100,50))
     monitor.blit(text,(60,90))
-    monitor.blit(image,(120,50))
+    #monitor.blit(image,(120,50))
     #monitor.blit(background,(100,60))
     pygame.display.update()
     for action in pygame.event.get():

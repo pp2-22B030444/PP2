@@ -33,7 +33,7 @@ SCREEN_WIDTH = 500
 SCREEN_HEIGHT = 600
 SPEED = 5
 SCORE = 0
- 
+coin_pickup_sound = pygame.mixer.Sound(str(Path.cwd() / "musics" / "coin.mp3")) 
 #Setting up Fonts
 font = pygame.font.SysFont("Verdana", 60)
 font_small = pygame.font.SysFont("Verdana", 20)
@@ -128,6 +128,7 @@ INC_SPEED = pygame.USEREVENT + 1
 pygame.time.set_timer(INC_SPEED, 1000)
  
 #Game Loop
+
 while True:
        
     #Cycles through all events occurring  
@@ -138,7 +139,7 @@ while True:
             pygame.quit()
             sys.exit()
         # Определяем, нужно ли добавлять новую монету
-        elif event.type == ADDCOIN:
+        if event.type == ADDCOIN:
             # Добавляем новую монету
             new_coin = Coin()
             coin_list.add(new_coin)
@@ -167,7 +168,7 @@ while True:
         # Каждая монета стоит 10 очков
         score += 10
         # Воспроизводим звук для монеты
-        #coin_pickup_sound.play()
+        coin_pickup_sound.play()
 
     # Проверяем, не слишком ли много монет
     if len(coin_list) >= COIN_COUNT:
@@ -188,10 +189,6 @@ while True:
 
     # Отображаем всё на экране
     pygame.display.flip()
-
-    
-
-
     scores = font_small.render(str(SCORE), True, BLACK)
     DISPLAYSURF.blit(scores, (10,10))
     DISPLAYSURF.blit(background, (0,0))
@@ -213,10 +210,7 @@ while True:
                 entity.kill() 
         time.sleep(2)
         print(f"Game over! Final score: {score}")
-        pygame.quit()
-
-        sys.exit()        
-         
-    pygame.display.update()
-    
+        pygame.quit()        
+        sys.exit()                 
+    pygame.display.update()    
     FramePerSec.tick(FPS)

@@ -19,6 +19,8 @@ snake_block=10
 snake_speed=10
 font_style=pygame.font.SysFont("bahnschrift", 20)
 score_font = pygame.font.SysFont("comicsansms", 20)
+sound=pygame.mixer.Sound('./musics/snake.mp3')
+sound.play()
 def Your_score(score):
    value = score_font.render("Ваш счёт: " + str(score), True, yellow)
    display.blit(value, [0, 0])
