@@ -166,7 +166,7 @@ while True:
     )
     for coin in coins_collected:
         # Каждая монета стоит 10 очков
-        score += 10
+        score += 1
         # Воспроизводим звук для монеты
         coin_pickup_sound.play()
 
@@ -202,7 +202,7 @@ while True:
         pygame.mixer.Sound('./musics/crash.mp3').play()
         time.sleep(0.5)
                     
-        DISPLAYSURF.fill(RED)
+        DISPLAYSURF.fill(BLUE)
         DISPLAYSURF.blit(game_over, (30,250))
        
         pygame.display.update()
