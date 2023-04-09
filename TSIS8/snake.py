@@ -130,7 +130,8 @@ def game_loop():
             foodx1 = round(random.randrange(1, dis_width - snake_block)/20.0) * 20.0
             foody1 = round(random.randrange(1, dis_height - snake_block)/20.0) * 20.0
             food_timer1 = pygame.time.get_ticks() + 5000        
-        if x1==foodx2 and y1==foody2:           
+        if x1==foodx2 and y1==foody2:
+           pygame.mixer.Sound('./musics/pah.mp3').play()           
            foodx2 = round(random.randrange(1,(dis_width - snake_block))/20.0) * 20.0
            foody2 = round(random.randrange(1,(dis_height - snake_block))/20.0) * 20.0
            food_timer3 = pygame.time.get_ticks() + 5000
