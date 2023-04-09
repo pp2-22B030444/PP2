@@ -52,7 +52,7 @@ def game_loop():
     foodx1 = round(random.randrange(1, dis_width-snake_block)/20.0)*20.0
     foody1 = round(random.randrange(1, dis_width - snake_block)/20.0)*20.0
     foodx2 = round(random.randrange(1, dis_width-snake_block)/20.0)*20.0
-    foody2 = round(random.randrange(1, dis_width - snake_block)/20.0)*20.0
+    foody2= round(random.randrange(1, dis_width - snake_block)/20.0)*20.0
     #sound.play()
     while not game_over:
         #sound.play()
