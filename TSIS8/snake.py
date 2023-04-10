@@ -17,7 +17,7 @@ display=pygame.display.set_mode((dis_width,dis_height))
 pygame.display.set_caption('Просто змейка')
 clock=pygame.time.Clock()
 snake_block=20
-snake_speed=11
+snake_speed=13
 font_style=pygame.font.SysFont("bahnschrift", 20)
 score_font = pygame.font.SysFont("comicsansms", 25)
 sound=pygame.mixer.Sound('./musics/song.mp3')
@@ -33,7 +33,7 @@ def our_snake(snake_block,snake_list):
 
 def message(msg,color):
     mesg = font_style.render(msg,True,color)
-    display.blit(mesg,[dis_width/7,dis_height/3])
+    display.blit(mesg,[dis_width/7,dis_height/2.5])
 
 def game_loop():
     game_over=False
@@ -53,10 +53,11 @@ def game_loop():
     foody1 = round(random.randrange(1, dis_width - snake_block)/20.0)*20.0
     foodx2 = round(random.randrange(1, dis_width-snake_block)/20.0)*20.0
     foody2= round(random.randrange(1, dis_width - snake_block)/20.0)*20.0
-    #sound.play()
+    sound.play()
     while not game_over:
-        #sound.play()
         while game_close==True:
+            #sound.play()
+
             display.fill(yellow)
             message("Вы проиграли! Нажмите Q для выхода или C для повторной игры!",black )
             pygame.display.update()
@@ -66,6 +67,8 @@ def game_loop():
                         game_over=True
                         game_close=False
                     elif event.key==pygame.K_c:
+                        sound.stop()
+                        sound.play()
                         game_loop()    
         for event in pygame.event.get():
             if event.type==pygame.QUIT:
@@ -135,7 +138,9 @@ def game_loop():
            foodx2 = round(random.randrange(1,(dis_width - snake_block))/20.0) * 20.0
            foody2 = round(random.randrange(1,(dis_height - snake_block))/20.0) * 20.0
            food_timer3 = pygame.time.get_ticks() + 5000
-           length_of_snake-=2          
+           length_of_snake = length_of_snake -2 
+           snake_List.pop(0) 
+           snake_List.pop(0) 
            pygame.display.update()
         if pygame.time.get_ticks() >= food_timer3:  
             foodx2 = round(random.randrange(1, dis_width - snake_block)/20.0) * 20.0
@@ -144,7 +149,7 @@ def game_loop():
         if length_of_snake<=0: 
             game_close=True
         clock.tick(snake_speed)
-        pygame.display.update()      
+        pygame.display.update()   
     time.sleep(1) 
     pygame.quit()
     quit()

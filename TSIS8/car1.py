@@ -23,9 +23,10 @@ GREEN = (0, 255, 0)
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 # Как часто должны генерироваться монеты (мс)
-coin_countdown = 2500
+coin_countdown = 4500
 coin_interval = 100
-
+coin_countdown1 = 4500
+coin_interval1 = 100
 # Сколько монет должно быть на экране, чтобы игра закончилась
 COIN_COUNT = 10 
 #Other Variables for use in the program
@@ -37,8 +38,7 @@ coin_pickup_sound = pygame.mixer.Sound(str(Path.cwd() / "musics" / "coin.mp3"))
 #Setting up Fonts
 font = pygame.font.SysFont("Verdana", 60)
 font_small = pygame.font.SysFont("Verdana", 20)
-game_over = font.render("  Game Over", True, BLACK)
- 
+game_over = font.render("  Game Over", True, BLACK) 
 background = pygame.image.load("./img/road.png")
 
 #Create a white screen 
@@ -67,19 +67,17 @@ class Player(pygame.sprite.Sprite):
         super().__init__() 
         self.image = pygame.image.load("./img/my.png")
         self.rect = self.image.get_rect()
-        self.rect.center = (160, 520)
+        self.rect.center = (200, 550)
         
     def move(self):
         pressed_keys = pygame.key.get_pressed()
         if pressed_keys[K_UP]:
             self.rect.move_ip(0, -5)
         if pressed_keys[K_DOWN]:
-            self.rect.move_ip(0,5)
-         
+            self.rect.move_ip(0,5)         
         if self.rect.left > 0:
             if pressed_keys[K_LEFT]:
-                self.rect.move_ip(-5, 0)
-              
+                self.rect.move_ip(-5, 0)              
         if self.rect.right < SCREEN_WIDTH:        
             if pressed_keys[K_RIGHT]:
                 self.rect.move_ip(5, 0)
@@ -90,36 +88,51 @@ class Coin(pygame.sprite.Sprite):
         super(Coin, self).__init__()
 
         # Получаем изображение монеты
-        coin_image = str(Path.cwd()  / "img" / "bit.png")
+        coin_image = str(Path.cwd()  / "img" / "1.png")
+        coin_image1 = str(Path.cwd()  / "img" / "bit.png")
 
         # Загружаем изображение, настраиваем альфа канал для прозрачности
         self.surf = pygame.image.load(coin_image).convert_alpha()
+        self.surf1 = pygame.image.load(coin_image1).convert_alpha()
 
         # Задаем стартовую позицию, сгенерированную случайным образом
-        self.rect = self.surf.get_rect(
-            center=(
-                randint(10, SCREEN_WIDTH - 10),
-                randint(10, SCREEN_HEIGHT - 10),
-            )
-        )       
+        self.rect = self.surf.get_rect(center=(randint(10, SCREEN_WIDTH - 10),randint(10, SCREEN_HEIGHT - 10),))       
+        self.rect1 = self.surf1.get_rect(center=(randint(10, SCREEN_WIDTH - 10),randint(10, SCREEN_HEIGHT - 10),))
+    def move(self):
+        self.speed3 += 0.001
+        self.rect.move_ip(0, self.speed3) 
+        if self.rect.bottom > 600:
+            self.rect.top = 0 
+            self.rect.center = (random.randint(20, 360), 10)
+             # Получаем изображение монеты
+            coin_image = str(Path.cwd()  / "img" / "1.png")
+            coin_image1 = str(Path.cwd()  / "img" / "bit.png")
 
+        # Загружаем изображение, настраиваем альфа канал для прозрачности
+            self.surf = pygame.image.load(coin_image).convert_alpha()
+            self.surf1 = pygame.image.load(coin_image1).convert_alpha()
+                
 #Setting up Sprites        
 P1 = Player()
 E1 = Enemy()
- 
+C1 = Coin()
 #Creating Sprites Groups
 enemies = pygame.sprite.Group()
 enemies.add(E1)
 all_sprites = pygame.sprite.Group()
 all_sprites.add(P1)
 all_sprites.add(E1)
+all_sprites.add(C1)
+coins = pygame.sprite.Group()
+coins.add(C1)
 # Создаем событие для добавления монеты
 ADDCOIN = pygame.USEREVENT + 1
 pygame.time.set_timer(ADDCOIN, coin_countdown)
-
+ADDCOIN1 = pygame.USEREVENT + 1
+pygame.time.set_timer(ADDCOIN1, coin_countdown1)
 # Настраиваем список монет
 coin_list = pygame.sprite.Group()
-
+coin_list1 = pygame.sprite.Group()
 # Инициализируем счет
 score = 0
 
@@ -143,42 +156,52 @@ while True:
             # Добавляем новую монету
             new_coin = Coin()
             coin_list.add(new_coin)
-
+        if event.type == ADDCOIN1:
+            # Добавляем новую монету
+            new_coin1= Coin()
+            coin_list1.add(new_coin1)
             # Ускоряем игру, если на экранее менее 3 монет
-            if len(coin_list) < 3:
-                coin_countdown -= coin_interval
+           # if len(coin_list) < 3:
+            #    coin_countdown -= coin_interval
             # Ограничиваем скорость
             if coin_countdown < 100:
                 coin_countdown = 100
 
             # Останавливаем предыдущий таймер
             pygame.time.set_timer(ADDCOIN, 0)
-
+            pygame.time.set_timer(ADDCOIN1, 0)
             # Запускаем новый таймер
             pygame.time.set_timer(ADDCOIN, coin_countdown)
+            pygame.time.set_timer(ADDCOIN1, coin_countdown1)
     # Обновляем позицию персонажа
     P1.update(pygame.mouse.get_pos())
-          
-
     # Проверяем, столкнулся ли игрок с монетой и удаляем, если это так
-    coins_collected = pygame.sprite.spritecollide(
-        sprite=P1, group=coin_list, dokill=True
-    )
+    coins_collected = pygame.sprite.spritecollide(sprite=P1, group=coin_list, dokill=True)
+    coins_collected1 = pygame.sprite.spritecollide(sprite=P1, group=coin_list1, dokill=True)
     for coin in coins_collected:
-        # Каждая монета стоит 10 очков
+        # Каждая монета стоит 1 очко
         score += 1
         # Воспроизводим звук для монеты
         coin_pickup_sound.play()
-
+    for coins in coins_collected1:
+        # Каждая монета стоит 3 очко
+        score += 3
+        # Воспроизводим звук для монеты
+        coin_pickup_sound.play()
+    
     # Проверяем, не слишком ли много монет
     if len(coin_list) >= COIN_COUNT:
         # Если монет много, останавливаем игру
         running = False
+    if len(coin_list1) >= COIN_COUNT:
+        # Если монет много, останавливаем игру
+        running = False    
 
     # Рисуем следующие монеты
     for coin in coin_list:
         DISPLAYSURF.blit(coin.surf, coin.rect)
-
+    for coins in coin_list1:
+        DISPLAYSURF.blit(coin.surf1, coin.rect1)
     # Отрисовываем персонажа
     DISPLAYSURF.blit(P1.image, P1.rect)
 
