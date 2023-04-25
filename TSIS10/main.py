@@ -74,17 +74,17 @@ try:
         if action == '1':
             print("Insert data")
             add_user()
-        elif action == '0':
+        if action == '0':
             create_table()
-        elif action == '2':
+        if action == '2':
             update()
-        elif action == '3':
+        if action == '3':
             delete_user()
-        elif action == '4':
+        if action == '4':
             find()
-        elif action == '5':
+        if action == '5':
             fetch_users()
-        elif action == '6':
+        if action == '6':
             cond = True
 
 

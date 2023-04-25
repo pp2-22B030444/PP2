@@ -5,21 +5,115 @@ import sys
 import os
 import psycopg2
 
-conn = psycopg2.connect(database = 'pp2', user = 'postgres', password = 'adminkbtu')
-cur = conn.cursor()
-cur.execute('''
-CREATE TABLE snake-list(
-    id INTEGER PRIMARY KEY,
-    player VARCHAR(255) NOT NULL
-);
-''')
+# conn = psycopg2.connect(database = 'pp2', user = 'postgres', password = 'adminkbtu')
+# cur = conn.cursor()
+# cur.execute('''
+# CREATE TABLE snake-list(
+#     id INTEGER PRIMARY KEY,
+#     player VARCHAR(255) NOT NULL
+# );
+# ''')
 
-conn = psycopg2.connect(database = 'pp2', user = 'postgres', password = 'adminkbtu')
-cur = conn.cursor()
-cur.execute('''
-INSERT INTO snake-list (player) VALUES(%s)
-);
-''')
+# conn = psycopg2.connect(database = 'pp2', user = 'postgres', password = 'adminkbtu')
+# cur = conn.cursor()
+# cur.execute('''
+# INSERT INTO snake-list (player) VALUES(%s)
+# );
+# ''')
+
+def create_table():
+    conn = psycopg2.connect(database = 'pp2', user = 'postgres', password = 'adminkbtu')
+    # database connection
+    cursor = conn.cursor()
+    cursor.execute("""CREATE TABLE snake_list (
+        id INTEGER PRIMARY KEY,
+        player VARCHAR(255) NOT NULL ,
+        score VARCHAR(255) NOT NULL);""")
+    print("[INFO] Table created successfully!")
+    conn.commit()
+    cursor.close()
+    conn.close()
+def add_user():
+    add = input().split()
+    postgre_query = """INSERT INTO snake_list( player, score) VALUES (%s, %s) """
+    data_toinsert = (add[0], add[1])
+    cursor.execute(postgre_query, data_toinsert)
+
+    conn.commit()
+    print("Data added!")
+
+
+def fetch_users():
+    cursor.execute("SELECT * FROM snake_list ")
+    table = cursor.fetchall()
+    for row in table:
+        c = row[0] + " " + row[1]
+        print(c)
+
+
+def update():
+    print("Type who's score you want to change")
+    name = input()
+    print("New number")
+    number = input()
+    postgre_query = """UPDATE snake_list SET player = %s WHERE score = %s """
+    cursor.execute(postgre_query, (number, name))
+
+    conn.commit()
+    print("Data updated!")
+
+
+def find():
+    print("Insert name who's score you want to see")
+    name = input()
+    cursor.execute("SELECT * FROM snake_list ")
+    table = cursor.fetchall()
+    for row in table:
+        if name == row[0]:
+            c = row[0] + " " + row[1]
+            print(c)
+def delete_user():
+    print("Insert name you want to delete")
+    name = input()
+    postgre_query = """DELETE FROM phonebook WHERE user_name = %s """
+    cursor.execute(postgre_query, (name,))
+
+    conn.commit()
+    print("Data deleted!")            
+try:
+    cond = False
+    conn = psycopg2.connect("dbname=pp2 user=postgres password=adminkbtu")
+    cursor = conn.cursor()
+
+    while not cond:
+        print(
+            "\nChoose action:\n0.Create table\n1.Add player and score\n2.Change score of existing player\n3.Delete player\n4.Find score by player\n5.Show all player and score\n6.Exit")
+        action = input()
+        if action == '1':
+            print("Insert data")
+            add_user()
+        if action == '0':
+            create_table()
+        if action == '2':
+            update()
+        if action == '3':
+            delete_user()
+        if action == '4':
+            find()
+        if action == '5':
+            fetch_users()
+        if action == '6':
+            cond = True
+            
+
+except psycopg2.Error as e:
+    print("Failed!")
+
+finally:
+    cursor.close()
+    conn.close()
+    print("Connection closed!")
+
 pygame.init()
 # цвета
 white = (255, 255, 255)
@@ -97,160 +191,164 @@ def game_loop():
     sound.play()
 
     # цикл работает пока игра не закончится
-    while not game_over:
-        # цикл когда игра законцится и начать снова
-        while game_close == True:
-            # sound.play()
-            display.blit(background1, (0,0))
-            # display.fill(yellow)
-            message("Вы проиграли! Нажмите Q для выхода или C для повторной игры!", white)
-            pygame.display.update()
+    if cond==True:
+        while not game_over:
+            # цикл когда игра законцится и начать снова
+            while game_close == True:
+                # sound.play()
+                display.blit(background1, (0,0))
+                # display.fill(yellow)
+                message("Вы проиграли! Нажмите Q для выхода или C для повторной игры!", white)
+                pygame.display.update()
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        pygame.quit()
+                        sys.exit()
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_q:
+                            game_over = True
+                            game_close = False                       
+                        elif event.key == pygame.K_c:
+                            sound.stop()                       
+                            #sound.play()
+                            game_loop()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
+                    game_over = True
                 if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_q:
-                        game_over = True
-                        game_close = False                       
-                    elif event.key == pygame.K_c:
-                        sound.stop()                       
-                        #sound.play()
-                        game_loop()
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                game_over = True
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_LEFT:
-                    x1_change = -snake_block
-                    y1_change = 0
-                elif event.key == pygame.K_RIGHT:
-                    x1_change = snake_block
-                    y1_change = 0
-                elif event.key == pygame.K_UP:
-                    x1_change = 0
-                    y1_change = -snake_block
-                elif event.key == pygame.K_DOWN:
-                    x1_change = 0
-                    y1_change = snake_block
-        # Обновление экрана
-        pygame.display.update()            
-        if y1 >= 25 and x1 <= 25 or y1<=25 and x1>=25:
-            game_close = True
-        if x1<=750 and y1>=750 or x1>=750 and y1<=750:
-            game_close = True
+                    if event.key == pygame.K_LEFT:
+                        x1_change = -snake_block
+                        y1_change = 0
+                    elif event.key == pygame.K_RIGHT:
+                        x1_change = snake_block
+                        y1_change = 0
+                    elif event.key == pygame.K_UP:
+                        x1_change = 0
+                        y1_change = -snake_block
+                    elif event.key == pygame.K_DOWN:
+                        x1_change = 0
+                        y1_change = snake_block
+            # Обновление экрана
+            pygame.display.update()            
+            if y1 >= 25 and x1 <= 25 or y1<=25 and x1>=25:
+                game_close = True
+            if x1<=750 and y1>=750 or x1>=750 and y1<=750:
+                game_close = True
 
-        x1 += x1_change
-        y1 += y1_change
-       
-        display.blit(background, (0, 0))
-        # рисуем еду      
-        display.blit(image,[foodx, foody, snake_block,snake_block])
-        display.blit(image1, [foodx1, foody1, snake_block, snake_block])
-        display.blit(image2, [foodx2, foody2, snake_block, snake_block])
-        # pygame.display.update()
-        # pygame.draw.rect(display, green, [foodx, foody, snake_block, snake_block])
-        # pygame.draw.rect(display, yellow, [foodx1, foody1, snake_block, snake_block])
-        # pygame.draw.rect(display, black, [foodx2, foody2, snake_block, snake_block])
-        snake_Head = []
-        snake_Head.append(x1)
-        snake_Head.append(y1)
-        snake_List.append(snake_Head)
-        print(snake_List)
+            x1 += x1_change
+            y1 += y1_change
         
-        if len(snake_List) > length_of_snake:
-            del snake_List[0]
-        # если змея столкнется с хвостом
-        for x in snake_List[:-1]:
-            if x == snake_Head:
-                game_close = True
-        our_snake(snake_block, snake_List)
-        Your_score(length_of_snake - 1)
-        Your_level(levels)       
-        # если змея столкнется с яблоком
-        if x1 == foodx and y1 == foody:
-            pygame.mixer.Sound('./musics/nam.mp3').play()
-            length_of_snake += 2
-            foodx = round(random.randrange(2, 31)) * 25.0
-            foody = round(random.randrange(2, 31)) * 25.0
-            food_timer = pygame.time.get_ticks() + 6000
+            display.blit(background, (0, 0))
+            # рисуем еду      
+            display.blit(image,[foodx, foody, snake_block,snake_block])
+            display.blit(image1, [foodx1, foody1, snake_block, snake_block])
+            display.blit(image2, [foodx2, foody2, snake_block, snake_block])
+            # pygame.display.update()
+            # pygame.draw.rect(display, green, [foodx, foody, snake_block, snake_block])
+            # pygame.draw.rect(display, yellow, [foodx1, foody1, snake_block, snake_block])
+            # pygame.draw.rect(display, black, [foodx2, foody2, snake_block, snake_block])
+            snake_Head = []
+            snake_Head.append(x1)
+            snake_Head.append(y1)
+            snake_List.append(snake_Head)
+            print(snake_List)
             
-            #pygame.display.update()
-        if pygame.time.get_ticks() >= food_timer:
-            foodx = round(random.randrange(2, 31)) * 25.0
-            foody = round(random.randrange(2, 31)) * 25.0
-            food_timer = pygame.time.get_ticks() + 6000
-            # если змея столкнется с вишней
-        if x1 == foodx1 and y1 == foody1:
-            pygame.mixer.Sound('./musics/nam.mp3').play()
-            length_of_snake += 3
-            foodx1 = round(random.randrange(2, 31)) * 25.0
-            foody1 = round(random.randrange(2, 31)) * 25.0
-            food_timer1 = pygame.time.get_ticks() + 6000
-            #pygame.display.update()
-        if pygame.time.get_ticks() >= food_timer1:
-            foodx1 = round(random.randrange(2, 31)) * 25.0
-            foody1 = round(random.randrange(2, 31)) * 25.0
-            food_timer1 = pygame.time.get_ticks() + 6000
-            # если змея столкнется с зеленой едой
-        if x1 == foodx2 and y1 == foody2:
-            pygame.mixer.Sound('./musics/pah.mp3').play()
-            length_of_snake = length_of_snake - 2
-            if length_of_snake > 1:
-                snake_List.pop(0)
-                snake_List.pop(0)
-            foodx2 = round(random.randrange(2, 31)) * 25.0
-            foody2 = round(random.randrange(2, 31)) * 25.0
-            food_timer3 = pygame.time.get_ticks() + 6000
-
-        if pygame.time.get_ticks() >= food_timer3:
-            foodx2 = round(random.randrange(2, 31)) * 25.0
-            foody2 = round(random.randrange(2, 31)) * 25.0
-            food_timer3 = pygame.time.get_ticks() + 6000
-        if [foodx, foody] in snake_List:
-            foodx = round(random.randrange(2, 31)) * 25.0
-            foody = round(random.randrange(2, 31)) * 25.0
-        if [foodx1, foody1] in snake_List:
-            foodx1 = round(random.randrange(2, 31)) * 25.0
-            foody1 = round(random.randrange(2, 31)) * 25.0
-        if [foodx2, foody2] in snake_List:
-            foodx2 = round(random.randrange(2, 31)) * 25.0
-            foody2 = round(random.randrange(2, 31)) * 25.0
-                
-        file = open(f'./img/{levels}.txt', 'r').readlines()
-        walls = []
-        for i , line in enumerate(file):
-            for j , each in enumerate(line):
-                if each == '+':
-                    walls.append(Wall(j*25, i*25))
-
-        for wall in walls:
-            wall.draw()
-            if snake_List[len(snake_List)-1][0] == wall.x and snake_List[len(snake_List)-1][1] == wall.y:
-                game_close = True
-            if wall.x==foodx and wall.y==foody:
+            
+            if len(snake_List) > length_of_snake:
+                del snake_List[0]
+            # если змея столкнется с хвостом
+            for x in snake_List[:-1]:
+                if x == snake_Head:
+                    game_close = True
+            our_snake(snake_block, snake_List)
+            Your_score(length_of_snake - 1)
+            Your_level(levels)       
+            # если змея столкнется с яблоком
+            if x1 == foodx and y1 == foody:
+                pygame.mixer.Sound('./musics/nam.mp3').play()
+                length_of_snake += 2
                 foodx = round(random.randrange(2, 31)) * 25.0
                 foody = round(random.randrange(2, 31)) * 25.0
-            if wall.x==foodx1 and wall.y==foody1:
+                food_timer = pygame.time.get_ticks() + 6000
+                
+                #pygame.display.update()
+            if pygame.time.get_ticks() >= food_timer:
+                foodx = round(random.randrange(2, 31)) * 25.0
+                foody = round(random.randrange(2, 31)) * 25.0
+                food_timer = pygame.time.get_ticks() + 6000
+                # если змея столкнется с вишней
+            if x1 == foodx1 and y1 == foody1:
+                pygame.mixer.Sound('./musics/nam.mp3').play()
+                length_of_snake += 3
                 foodx1 = round(random.randrange(2, 31)) * 25.0
-                foody1 = round(random.randrange(2, 31)) * 25.0    
-            if wall.x==foodx2 and wall.y==foody2:
+                foody1 = round(random.randrange(2, 31)) * 25.0
+                food_timer1 = pygame.time.get_ticks() + 6000
+                #pygame.display.update()
+            if pygame.time.get_ticks() >= food_timer1:
+                foodx1 = round(random.randrange(2, 31)) * 25.0
+                foody1 = round(random.randrange(2, 31)) * 25.0
+                food_timer1 = pygame.time.get_ticks() + 6000
+                # если змея столкнется с зеленой едой
+            if x1 == foodx2 and y1 == foody2:
+                pygame.mixer.Sound('./musics/pah.mp3').play()
+                length_of_snake = length_of_snake - 2
+                if length_of_snake > 1:
+                    snake_List.pop(0)
+                    snake_List.pop(0)
                 foodx2 = round(random.randrange(2, 31)) * 25.0
                 foody2 = round(random.randrange(2, 31)) * 25.0
-            
-        # если длинна змеи меньше 0
-        if length_of_snake <= 0:
-            game_close = True
-        if length_of_snake> cnt:
-            levels+=1
-            levels%=4
-            cnt+=10
-        elif length_of_snake >= 10:
-            snake_speed += 0.001
+                food_timer3 = pygame.time.get_ticks() + 6000
 
-        clock.tick(snake_speed)
-        #pygame.display.update()
-        # time.sleep(1)
-    pygame.quit()
-    quit()
+            if pygame.time.get_ticks() >= food_timer3:
+                foodx2 = round(random.randrange(2, 31)) * 25.0
+                foody2 = round(random.randrange(2, 31)) * 25.0
+                food_timer3 = pygame.time.get_ticks() + 6000
+            if [foodx, foody] in snake_List:
+                foodx = round(random.randrange(2, 31)) * 25.0
+                foody = round(random.randrange(2, 31)) * 25.0
+            if [foodx1, foody1] in snake_List:
+                foodx1 = round(random.randrange(2, 31)) * 25.0
+                foody1 = round(random.randrange(2, 31)) * 25.0
+            if [foodx2, foody2] in snake_List:
+                foodx2 = round(random.randrange(2, 31)) * 25.0
+                foody2 = round(random.randrange(2, 31)) * 25.0
+                    
+            file = open(f'./img/{levels}.txt', 'r').readlines()
+            walls = []
+            for i , line in enumerate(file):
+                for j , each in enumerate(line):
+                    if each == '+':
+                        walls.append(Wall(j*25, i*25))
+
+            for wall in walls:
+                wall.draw()
+                if snake_List[len(snake_List)-1][0] == wall.x and snake_List[len(snake_List)-1][1] == wall.y:
+                    game_close = True
+                if wall.x==foodx and wall.y==foody:
+                    foodx = round(random.randrange(2, 31)) * 25.0
+                    foody = round(random.randrange(2, 31)) * 25.0
+                if wall.x==foodx1 and wall.y==foody1:
+                    foodx1 = round(random.randrange(2, 31)) * 25.0
+                    foody1 = round(random.randrange(2, 31)) * 25.0    
+                if wall.x==foodx2 and wall.y==foody2:
+                    foodx2 = round(random.randrange(2, 31)) * 25.0
+                    foody2 = round(random.randrange(2, 31)) * 25.0
+                
+            # если длинна змеи меньше 0
+            if length_of_snake <= 0:
+                game_close = True
+            if length_of_snake> cnt:
+                levels+=1
+                levels%=4
+                cnt+=10
+            elif length_of_snake >= 10:
+                snake_speed += 0.001
+
+            clock.tick(snake_speed)
+            #pygame.display.update()
+            # time.sleep(1)
+        print(length_of_snake)   
+        pygame.quit()
+        quit()
+
 game_loop()
