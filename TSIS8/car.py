@@ -1,5 +1,5 @@
 
-import pygame , sys , random , time , os
+import pygame , sys , random , time 
 from pygame.locals import *
 pygame.init()
 
@@ -28,10 +28,11 @@ coinFont2 = pygame.font.SysFont("childer", 25)
 sosFont = pygame.font.SysFont('Game Over Regular', 60)
 bonus2pointFont = pygame.font.SysFont('Game Over Regular', 70)
 
-
+# Определяем спрайт для игрока
 class Player(pygame.sprite.Sprite): 
     def __init__(self):
         super().__init__() 
+       # Загружаем изображение
         self.image = pygame.image.load("./img/Player.png")
         self.rect = self.image.get_rect()
         self.rect.center = (200, 550) 
@@ -66,12 +67,15 @@ class Player(pygame.sprite.Sprite):
             if self.rect.left > 0:
                 if pressed_keys[K_RIGHT]:
                     self.rect.move_ip(-self.speed, 0)
+# Определяем спрайт для машин                    
 class Enemy(pygame.sprite.Sprite):
     def __init__(self): 
         super().__init__()
         self.rand = random.randint(2, 7)
+        # Загружаем изображение
         self.image = pygame.image.load(f'./img'+f'/{self.rand}.png')
         self.rect = self.image.get_rect()
+         # Задаем стартовую позицию, сгенерированную случайным образом
         self.rect.center = (random.randint(20, 360), 10)
         self.speed2 = 7
   
@@ -81,16 +85,19 @@ class Enemy(pygame.sprite.Sprite):
         if (self.rect.bottom > 610): 
             self.rect.top = 0                
             self.E = random.randint(2, 7)
+            # Загружаем изображение
             self.image = pygame.image.load(f'./img' + f'/{self.E}.png' )
             self.rect = self.image.get_rect()
+             # Задаем стартовую позицию, сгенерированную случайным образом
             self.rect.center = (random.randint(20, 360), 10)   
-
+# Определяем спрайт для монет
 class Coins(pygame.sprite.Sprite): 
     def __init__(self):
         super().__init__()
-        self.y = random.randint(1, 1)
+        # Загружаем изображение
         self.image = pygame.image.load(f'./img/1.png') 
         self.rect = self.image.get_rect() 
+         # Задаем стартовую позицию, сгенерированную случайным образом
         self.rect.center = (random.randint(10, 390), 25) 
         self.speed3 = 5
     
@@ -99,15 +106,18 @@ class Coins(pygame.sprite.Sprite):
         self.rect.move_ip(0, self.speed3) 
         if self.rect.bottom > 600:
             self.rect.top = 0 
+             # Задаем стартовую позицию, сгенерированную случайным образом
             self.rect.center = (random.randint(20, 360), 10)
+            # Загружаем изображение
             self.image = pygame.image.load(f'./img/1.png')
-
+# Определяем спрайт для бонуса
 class Bonuscoin(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        self.r = random.randint(1, 12)
+        # Загружаем изображение
         self.image = pygame.image.load(f'./img/maintenance.png')
         self.rect = self.image.get_rect()
+         # Задаем стартовую позицию, сгенерированную случайным образом
         self.rect.center = (random.randint(10, 390), 10)
         self.ayou = 0
             
@@ -116,15 +126,20 @@ class Bonuscoin(pygame.sprite.Sprite):
         self.rect.move_ip(0, self.speed4)
         if self.rect.bottom > 600:
             self.rect.top = 0
+             # Задаем стартовую позицию, сгенерированную случайным образом
             self.rect.center = (random.randint(20, 360), 10)
+            # Загружаем изображение
             self.image = pygame.image.load(f'./img/maintenance.png')
             self.ayou = 0    
+# Определяем спрайт для препятствия
 
 class Beer(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
+        # Загружаем изображение
         self.image = pygame.image.load(f'./img/beer.png')
         self.rect = self.image.get_rect()
+         # Задаем стартовую позицию, сгенерированную случайным образом
         self.rect.center = (random.randint(10, 390), 10)
         self.arus = 0
 
@@ -135,16 +150,18 @@ class Beer(pygame.sprite.Sprite):
         self.random = (random.randint(1, 4))
         if self.rect.bottom > 600:
             self.rect.top = 0
+             # Задаем стартовую позицию, сгенерированную случайным образом
             self.rect.center = (random.randint(10, 390), 10)
+            # Загружаем изображение
             self.image = pygame.image.load(f'./img/beer.png')
             self.arus = 0
-           
+#Настройка спрайтов          
 P1 = Player()
 E1 = Enemy()
 C1 = Coins()
 B1 = Bonuscoin()
 Q1 = Beer()
-
+#Creating Sprites Groups
 enemies = pygame.sprite.Group() 
 enemies.add(E1)
 bonus = pygame.sprite.Group()
@@ -172,15 +189,18 @@ show_sos = False
 bonus_timer = 0
 
 while running:
+    #Циклически просматривает все происходящие события
     pygame.display.update()
     for event in pygame.event.get():
         if event.type == QUIT:
             running = False
             pygame.quit()
             sys.exit()
+            
+       # Выводим текущий счет        
     score = coinFont.render(str(cnt) + '$', True, BLACK)
     dollarimage = pygame.image.load('./img/money.png')
-
+  # Отображаем всё на экране
     screen.blit(background, (0, 0))
     screen.blit(score, (350, 25))
     screen.blit(dollarimage, (310, 21))
@@ -189,17 +209,17 @@ while running:
         screen.blit(entity.image, entity.rect)
         entity.move()
 
-    if B1.ayou >= 10:
+    if B1.ayou >= 8:
         for things in new_sprites:
             screen.blit(things.image, things.rect)
             things.move()
 
-    if Q1.arus >= 15:
+    if Q1.arus >= 10:
         for x in beer_sprites:
             screen.blit(x.image, x.rect)
             x.move()
 
-
+    #Будет запущен, если произойдет столкновение между игроком и врагом
     if pygame.sprite.spritecollideany(P1, enemies):
         pygame.mixer.Sound('./musics/crash1.mp3').play()
         photo = pygame.image.load("./img/gameover.jpg")   
@@ -213,7 +233,7 @@ while running:
         time.sleep(2)
         pygame.quit()
         sys.exit()
-    
+    #Будет запущен, если произойдет столкновение между игроком и монетой
     if pygame.sprite.spritecollideany(P1, coins):
         P1.BEER = True
         pygame.mixer.Sound('./musics/coin1.mp3').play()
@@ -223,7 +243,7 @@ while running:
         C1.rect.top = 600
     
 
-
+    #Будет запущен, если произойдет столкновение между игроком и припятствием
     if pygame.sprite.spritecollideany(P1, beer):
         pygame.mixer.Sound('./musics/beer.mp3').play()
         sos_timer = pygame.time.get_ticks()
@@ -238,7 +258,7 @@ while running:
         screen.blit(SOS, (140, 230))
         if pygame.time.get_ticks() - sos_timer >= 5000:
             show_sos = False
-
+  
     if pygame.sprite.spritecollideany(P1, bonus):  
         B1.ayou = 0
         cnt+=2

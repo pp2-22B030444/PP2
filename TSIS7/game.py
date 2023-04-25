@@ -28,7 +28,7 @@ class Player(pygame.sprite.Sprite):
         super(Player, self).__init__()
 
         # Получаем изображение персонажа
-        player_image = str(Path.cwd() / "img" / "mu.png")
+        player_image = str(Path.cwd() / "img" / "beer.png")
         # Загружаем изображение, настраиваем альфа канал для прозрачности
         self.surf = pygame.image.load(player_image).convert_alpha()
         # Сохраняем в прямоугольнике, чтобы перемещать объект

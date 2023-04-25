@@ -30,4 +30,4 @@ while not done:
                         x += 20
         
         pygame.display.flip()
-        clock.tick(20)
+        clock.tick(10)

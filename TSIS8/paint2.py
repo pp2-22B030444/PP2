@@ -1,101 +1,87 @@
 import pygame as pg
-
+from math import cos, sin , pi 
+'''
+Draw square
+Draw right triangle
+Draw equilateral triangle
+Draw rhombus
+Comment your code
+'''
 pg.init()
 screen = pg.display.set_mode((800, 600))
 surf = pg.Surface((700, 600))
-buttons = pg.Surface((100, 210)) # создаю панель кнопок
+buttons = pg.Surface((100, 240)) # создаю панель кнопок
 font = pg.font.SysFont("Verdana", 15)
 cur_color = 'white' # текущий цвет который могу менять
 # создаем словарь комманд
 commands = {
-    'line': [4, 4, 44, 44],
-    'rect': [52, 4, 44, 44],
-    'circle': [4,50, 44, 44],
-    'eraser': [52, 50, 44, 44]
+    'right_triangle': [4, 4, 44, 44],
+    'sqr': [52, 4, 44, 44],
+    'triangle': [4, 50, 44, 44],
+    'rhombus': [52, 50, 44, 44],
+    'eraser' : [1000, 1000, 1, 1]
 }
 # функция для установки панели с кнопочек
 def setsurf():
     surf.fill('black')
+    
     buttons.fill('white')
-    pg.draw.rect(buttons, 'black', (2, 2, 96, 206), 1)
+    pg.draw.rect(buttons, 'black', (2, 2, 96, 236), 1)
+    
     for i in commands:
         pg.draw.rect(buttons, 'black', commands[i], 1)
-    
-    pg.draw.aaline(buttons, 'black', (8, 8), (40, 40), 1)
-    pg.draw.rect(buttons, 'black', (58, 10, 32, 32), 1)
-    pg.draw.circle(buttons, 'black', (27, 70), 15, 1)
-    pg.draw.rect(buttons, 'black', (56, 58, 36, 28))
+    tr1 = pg.image.load("./img/right_triangle1.png")
+    buttons.blit(tr1, (8, 8))
+    tr2 = pg.image.load("./img/equilateral-triangle1.png")
+    buttons.blit(tr2, (8, 55))
+    pg.draw.rect(buttons, 'black', (58, 10, 32, 32), 2)
+    rh = pg.image.load("./img/rhombus.png")
+    buttons.blit(rh, (56, 58))
     screen.blit(surf, (0, 0))
     screen.blit(buttons, (700, 0))
-# функция для отрисовки линии
-def line(screen, start, end, d, color):
+# функция для получения расстояния между двумя точками
+def get_distance(a,b): 
+    return ((b[0] - a[0]) ** 2 + (b[1] - a[1]) ** 2) ** 0.5
+# функция для отрисовки прямоугольного треугольника
+def right_triangle(screen, cur, end, d, color): 
+    x1, y1, x2, y2 = cur[0], cur[1], end[0], end[1] 
+    difx = abs(x1-x2) 
+    dify = abs(y1-y2) 
+    if x1 <= x2: 
+        if y1 < y2: 
+            pg.draw.polygon(screen, color, [(x1, y1), (x1, y1 + dify), (x2, y2)], d)    
+        else: 
+            pg.draw.polygon(screen, color, [(x1, y1), (x1, y1 - dify), (x2, y2)], d)    
+             
+    else: 
+        if y1 < y2: 
+            pg.draw.polygon(screen, color, [(x1, y1), (x1, y1 + dify), (x2, y2)], d)    
+        else: 
+            pg.draw.polygon(screen, color, [(x1, y1), (x1, y1 - dify), (x2, y2)], d)    
+# функция для отрисовки равностороннего треугольника
+def triangle(color, pos):
+    pg.draw.polygon(surf, color, pos, 3)
+# функция для отрисовки квадрата
+def square(screen, start, end, d, color):
     x1 = start[0]
     y1 = start[1]
     x2 = end[0]
     y2 = end[1]
 
-    dx = abs(x1 - x2)
-    dy = abs(y1 - y2)
-
-    A = y2 - y1
-    B = x1 - x2
-    C = x2 * y1 - x1 * y2
-
-    if dx > dy:
-        if x1 > x2:
-            x1, x2 = x2, x1
-            y1, y2 = y2, y1
-
-        for x in range(x1, x2):
-            y = (-C - A * x) / B
-            pg.draw.circle(screen, color, (x, y), d)
-    else:   
-        if y1 > y2:
-            x1, x2 = x2, x1
-            y1, y2 = y2, y1
-        for y in range(y1, y2):
-            x = (-C - B * y) / A
-            pg.draw.circle(screen, color, (x, y), d)
-# функция для отрисовки прямоугольника
-def rectangle(screen, start, end, d, color):
-    x1 = start[0]
-    y1 = start[1]
-    x2 = end[0]
-    y2 = end[1]
-
-    width = abs(x1-x2)
-    height = abs(y1-y2)
-
+    a = abs(x1-x2)
     if x1 <= x2:
         if y1 < y2:
-            pg.draw.rect(screen, color, (x1, y1, width, height), d)
+            pg.draw.rect(screen, color, (x1, y1, a, a), d)
         else:
-            pg.draw.rect(screen, color, (x1, y2, width, height), d)
+            pg.draw.rect(screen, color, (x1, y2, a, a), d)
     else:
         if y1 < y2:
-            pg.draw.rect(screen, color, (x2, y1, width, height), d)
+            pg.draw.rect(screen, color, (x2, y1, a, a), d)
         else:
-            pg.draw.rect(screen, color, (x2, y2, width, height), d)
-# функция для отрисовки круга
-def circle(screen, start, end, d, color):
-    x1 = start[0]
-    y1 = start[1]
-    x2 = end[0]
-    y2 = end[1]
-
-    width = abs(x1-x2)
-    height = abs(y1-y2)
-
-    if x1 <= x2:
-        if y1 < y2:
-            pg.draw.ellipse(screen, color, (x1, y1, width, height), d)
-        else:
-            pg.draw.ellipse(screen, color, (x1, y2, width, height), d)
-    else:
-        if y1 < y2:
-            pg.draw.ellipse(screen, color, (x2, y1, width, height), d)
-        else:
-            pg.draw.ellipse(screen, color, (x2, y2, width, height), d)
+            pg.draw.rect(screen, color, (x2, y2, a, a), d)
+# функция для отрисовки ромба
+def rhombus(color, pos):
+        pg.draw.polygon(surf, color, pos, 3)
 
 last_pos = (0, 0)
 w = 2
@@ -103,11 +89,12 @@ draw_line = False
 erase = False
 ed = 50
 
-d = {
-    'line' : True,
-    'rect': False,
-    'circle': False,
-    'eraser': False
+di = {
+    'right_triangle' : True,
+    'sqr': False,
+    'triangle': False,
+    'rhombus': False,
+    'eraser' : False
 }
 
 setsurf()
@@ -117,7 +104,7 @@ while running:
     for event in pg.event.get():
         if event.type == pg.QUIT:
             running = False
-        # меняем цвета при нажатии на клавиши  
+        # меняем цвета  или выбираем ластик при нажатии на клавиши             
         if event.type == pg.KEYDOWN:
             if event.key == pg.K_1:
                 cur_color = 'red'
@@ -126,39 +113,45 @@ while running:
             if event.key == pg.K_3:
                 cur_color = 'blue'
             if event.key == pg.K_4:
-                cur_color = 'white'  
-        # при нажатии на область определенной кнопочки меняем значение соответственной команды на True в словаре комманд
+                cur_color = 'white'
+            if event.key == pg.K_5: 
+                di['eraser'] = True 
+                for k, v in di.items(): 
+                    if k != 'eraser': 
+                        di[k] = False   
+        # при нажатии на область определенной кнопочки меняем значение соответственной команды на True в словаре комманд           
         if event.type == pg.MOUSEBUTTONDOWN:
             for k, v in commands.items():
                 if v[0] <= pos[0]-700 <= v[0] + v[2] and v[1] <= pos[1] <= v[1] + v[3]:
-                    d[k] = True
-                    for i, j in d.items():
+                    di[k] = True
+                    for i, j in di.items():
                         if i != k:
-                            d[i] = False
+                            di[i] = False
                     break
-        # запускаем функции соответственных комманд  
-        if d['line'] == 1:
-            if event.type == pg.MOUSEBUTTONDOWN:
-                last_pos = pos
-                pg.draw.circle(surf, cur_color, pos, w)
-                draw_line = True
-            if event.type == pg.MOUSEBUTTONUP:
-                draw_line = False
-            if event.type == pg.MOUSEMOTION:
-                if draw_line:
-                    line(surf, last_pos, pos, w, cur_color)
-                last_pos = pos
-        elif d['rect'] == 1:
+        # запускаем функции соответственных комманд                 
+        if di['right_triangle'] == 1:
             if event.type == pg.MOUSEBUTTONDOWN:
                 last_pos = pos
             if event.type == pg.MOUSEBUTTONUP:
-                rectangle(surf, last_pos, pos, w, cur_color)
-        elif d['circle'] == 1:
+                right_triangle(surf, last_pos, pos, w, cur_color)
+        elif di['sqr'] == 1:
             if event.type == pg.MOUSEBUTTONDOWN:
                 last_pos = pos
             if event.type == pg.MOUSEBUTTONUP:
-                circle(surf, last_pos, pos, w, cur_color)
-        elif d['eraser'] == 1:
+                square(surf, last_pos, pos, w, cur_color)
+        elif di['triangle'] == 1:
+            if event.type == pg.MOUSEBUTTONDOWN:
+                last_pos = pos
+            if event.type == pg.MOUSEBUTTONUP:
+                d = get_distance(last_pos, pos)
+                triangle(cur_color,[last_pos, pos,((pos[0] - last_pos[0])*cos(pi/3) - (pos[1] - last_pos[1])*sin(pi/3) + last_pos[0], (pos[0] - last_pos[0])*sin(pi/3) + (pos[1] - last_pos[1])*cos(pi/3) + last_pos[1])])
+        elif di['rhombus'] == 1:
+            if event.type == pg.MOUSEBUTTONDOWN:
+                last_pos = pos
+            if event.type == pg.MOUSEBUTTONUP:
+                d = get_distance(last_pos, pos)
+                rhombus(cur_color, [last_pos, (last_pos[0] + d, last_pos[1]), (pos[0] + d, pos[1]), pos])
+        elif di['eraser'] == 1:
             if event.type == pg.MOUSEBUTTONDOWN:
                 (x, y) = pos
                 pg.draw.rect(surf, 'black', (x, y, ed, ed))
@@ -169,7 +162,7 @@ while running:
             if event.type == pg.MOUSEBUTTONUP:
                 erase = False
     # выделяю красной рамкой выбранную комманду
-    for k, v in d.items():
+    for k, v in di.items():
         if v == True:
             pg.draw.rect(buttons, 'red', commands[k], 1)
         else:
@@ -187,6 +180,9 @@ while running:
     buttons.blit(b, (5, 160))
     y = font.render('4 - White', True, 'black')
     buttons.blit(y, (5, 180))
+    e = font.render('5 - Eraser', True, 'black')
+    buttons.blit(e, (5, 200))
 
     pg.display.update()
 pg.quit()
+    

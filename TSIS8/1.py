@@ -30,12 +30,12 @@ def setsurf():
     
     for i in commands:
         pg.draw.rect(buttons, 'black', commands[i], 1)
-    tr1 = pg.image.load("./img/right_triangle.png")
+    tr1 = pg.image.load("./img/right_triangle1.png")
     buttons.blit(tr1, (8, 8))
-    tr2 = pg.image.load("./img/equilateral-triangle.png")
+    tr2 = pg.image.load("./img/equilateral-triangle1.png")
     buttons.blit(tr2, (8, 55))
     pg.draw.rect(buttons, 'black', (58, 10, 32, 32), 2)
-    rh = pg.image.load("./img/romb.png")
+    rh = pg.image.load("./img/rhombus.png")
     buttons.blit(rh, (56, 58))
     screen.blit(surf, (0, 0))
     screen.blit(buttons, (700, 0))

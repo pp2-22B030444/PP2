@@ -50,7 +50,7 @@ while not finished:
         if event.type == pygame.KEYDOWN: 
             if event.key == pygame.K_ESCAPE: 
                 finished = True 
-      
+    # отображаем все на экране  
     screen.blit(background, (0, 0))  
     screen.blit(image, rect) 
     screen.blit(imagem, rect1) 
