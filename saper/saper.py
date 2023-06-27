@@ -34,23 +34,23 @@ game_close = False
 display= pygame.display.set_mode((width,height))
 pygame.display.set_caption('Minesweeper')
 clock=pygame.time.Clock()
-block=pygame.image.load("./img/empty.png")
+block=pygame.image.load("./saper/images/empty.png")
 block=pygame.transform.scale(block,(25,25))
-block1=pygame.image.load("./img/one.png")
+block1=pygame.image.load("./saper/images/one.png")
 block1=pygame.transform.scale(block1,(25,25))
-block2=pygame.image.load("./img/two.png")
+block2=pygame.image.load("./saper/images/two.png")
 block2=pygame.transform.scale(block2,(25,25))
-block3=pygame.image.load("./img/three.png")
+block3=pygame.image.load("./saper/images/three.png")
 block3=pygame.transform.scale(block3,(25,25))
-block4=pygame.image.load("./img/four.png")
+block4=pygame.image.load("./saper/images/four.png")
 block4=pygame.transform.scale(block4,(25,25))
-block5=pygame.image.load("./img/five.png")
-block6=pygame.image.load("./img/six.png")
-block7=pygame.image.load("./img/seven.png")
-block8=pygame.image.load("./img/eight.png")
-block9=pygame.image.load("./img/mine.png")
+block5=pygame.image.load("./saper/images/five.png")
+block6=pygame.image.load("./saper/images/six.png")
+block7=pygame.image.load("./saper/images/seven.png")
+block8=pygame.image.load("./saper/images/eight.png")
+block9=pygame.image.load("./saper/images/mine.png")
 block9=pygame.transform.scale(block9,(25,25))
-block10=pygame.image.load("./img/blockk.png")
+block10=pygame.image.load("./saper/images/blockk.png")
 block10=pygame.transform.scale(block10,(25,25))
 # создаем группу спрайтов для всех блоков на экране
 
@@ -93,11 +93,8 @@ class Block(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
-        
-        
         #self.image = pygame.Surface([x, y])
-        #self.rect = self.image.get_rect()
-        
+        #self.rect = self.image.get_rect()     
         
     def draw(self):
         display.blit(block10,(self.rect.x,self.rect.y))  
@@ -131,7 +128,7 @@ class Eight:
         self.y=y
     def draw(self):
         display.blit(block,(self.x,self.y)) 
-B=Block()              
+B=Block(50,50)              
 all_blocks = pygame.sprite.Group()
 
 all_blocks.add(B)  
@@ -161,7 +158,7 @@ while not game_over:
                 print("Левая кнопка мыши нажата")
             
     
-    file = open(f'./img/{11}.txt', 'r').readlines()
+    file = open(f'./saper/images/{11}.txt', 'r').readlines()
     walls = []
     for i , line in enumerate(file):
         for j , each in enumerate(line):
